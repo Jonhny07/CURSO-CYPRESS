@@ -1,0 +1,14 @@
+ {
+  
+  "producto1": {
+    "cantidad": "2",
+    "nombre": "Buzo Negro",
+    "precio": "23.76"
+  },
+  "producto2": {
+    "cantidad": "1",
+    "nombre": "Zapatillas Azules",
+    "precio": "30.33"
+  }
+
+}
