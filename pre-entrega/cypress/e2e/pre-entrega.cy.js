@@ -29,15 +29,25 @@ describe("Primera Entrega Validaciones", () => {
 
   it("Validar Requisitos de la Pre-Entrega", () => {
     //Se agrega el primer producto
-    productPage.clickAddToCartProduct1();
+    productPage
+      .clickAddButton(data.producto1.nombre)
+      .find(`[name="${data.producto1.nombre}"]`)
+      .click();
     productPage.clickCloseModal();
 
     //Agregando el mismo producto
-    productPage.clickAddToCartProduct1();
+    productPage
+      .clickAddButton(data.producto1.nombre)
+      .find(`[name="${data.producto1.nombre}"]`)
+      .click();
     productPage.clickCloseModal();
 
     //Agregamos el segundo producto
-    productPage.clickAddCartProduct2();
+    productPage
+      .clickAddButton(data.producto2.nombre)
+      .find(`[name="${data.producto2.nombre}"]`)
+      .click();
+
     productPage.clickCloseModal();
 
     //Validamos el texto del boton GO TO SHOPPING CART
@@ -48,52 +58,35 @@ describe("Primera Entrega Validaciones", () => {
     productPage.clickGoToCart();
 
     ///Verificar nombre,cantidad,precio unitario y el precio total del producto
-    shoppingCartPage
-      .obtenerCantProducto1()
-      .should("have.text", data.producto1.cantidad);
-    shoppingCartPage
-      .obtenerProductos1()
-      .should("have.text", data.producto1.nombre);
+    shoppingCartPage.obtenerCantProducto(
+      data.producto1.nombre,
+      data.producto1.cantidad
+    );
+    shoppingCartPage.obtenerCantProducto(
+      data.producto2.nombre,
+      data.producto2.cantidad
+    );
 
-    shoppingCartPage
-      .obtenerNombreProduct1()
-      .invoke("text")
-      .should("match", /23.76/);
+    shoppingCartPage.obtenerNombreProduct(
+      data.producto1.cantidad,
+      data.producto1.nombre
+    );
 
-    ///// Verificamos el total precio del producto/////
+    shoppingCartPage.obtenerShowPrice(
+      data.producto1.nombre,
+      data.producto1.precio
+    );
 
-    data.precio = data.producto1.precio * data.producto1.cantidad;
-
-    shoppingCartPage
-      .getTotalPrice1(data.producto1.precio * data.producto1.cantidad)
-      .invoke("text").should("equal", `$ ${data.precio}`);
-      
-    //`name^=${data.precio}`
-    ///Verificar nombre,cantidad,precio unitario y el precio total del producto
-    shoppingCartPage
-      .obtenerCantProducto2()
-      .should("have.text", data.producto2.cantidad);
-    shoppingCartPage
-      .obtenerProductos2()
-      .should("have.text", data.producto2.nombre);
-
-    data.precio2= data.producto2.precio * data.producto2.cantidad
-
-   shoppingCartPage
-      .getTotalPrice2(data.producto2.precio * data.producto2.cantidad)
-      .invoke("text").should("equal", `$ ${data.precio2}`);
-
-    ///// Verificamos el total precio del producto/////
-
-    //Visualizamos el total de los 2 productos
-
-    shoppingCartPage.obtenerShowTotalPrice();
+    shoppingCartPage.obtenerShowPrice(
+      data.producto2.nombre,
+      data.producto2.precio
+    );
+    shoppingCartPage.visualizarTotal();
 
     data.precioTotal =
       data.producto1.precio * data.producto1.cantidad +
       data.producto2.precio * data.producto2.cantidad;
 
-    shoppingCartPage.obtenerPrecioTotalProduct().should("contain", data.precioTotal);
-    
+    shoppingCartPage.getTotalPrice(data.precioTotal);
   });
 });

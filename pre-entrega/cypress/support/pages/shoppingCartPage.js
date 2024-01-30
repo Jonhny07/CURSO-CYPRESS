@@ -2,51 +2,56 @@ export class ShoppingCartPage {
   constructor() {
     this.productQuantity = ":nth-child(2) > .css-1bhbsny > #productAmount";
     this.productName = "#productName";
-    this.price = ":nth-child(2) > .css-1bhbsny > #unitPrice";
-
-    this.productQuantity2 = ":nth-child(3) > .css-1bhbsny > #productAmount";
-    this.productName2 = ":nth-child(3) > .css-1bhbsny > #productName";
-    this.price2 = ":nth-child(3) > .css-1bhbsny > #unitPrice";
-    this.showTotalPrice = "div.css-n1d5pa";
+    //this.price = ":nth-child(2) > .css-1bhbsny > #unitPrice";
+    this.price = "#unitPrice";
+    this.buttonShow = "div.css-n1d5pa";
     this.precioTotalProduct = "#price > b";
-  
   }
 
-  obtenerShowTotalPrice() {
-    cy.get(this.showTotalPrice).children(".css-1i1ynt3").click();
+  obtenerCantProducto(nombre, cantidad) {
+    //return cy.get(this.productQuantity);
+    return cy
+      .contains("#productName", nombre)
+      .prev("#productAmount")
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.be.equal(`${cantidad}`);
+      });
   }
 
-  obtenerCantProducto1() {
-    return cy.get(this.productQuantity);
+  obtenerNombreProduct(cantidad, nombre) {
+    return cy
+      .contains("#productAmount", cantidad)
+      .siblings(this.productName)
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.be.equal(`${nombre}`);
+      });
   }
-  obtenerProductos1() {
-    return cy.get(this.productName);
-  }
-  obtenerNombreProduct1() {
-    return cy.get(this.price);
-  }
-  getTotalPrice1(parcial1) {
-    this.PriceParcial1 =`#totalPrice[name^='${parcial1}']`
-    return cy.get(this.PriceParcial1);
+  obtenerShowPrice(nombre, precio) {
+    //return cy.get(this.showTotalPrice).children(".css-1i1ynt3").click();
+    return cy
+      .contains("#productName", nombre)
+      .siblings(this.price)
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.be.equal(`$ ${precio}`);
+      });
   }
 
-  /////////////////verificando el 2do producto//////////////////////////
+  visualizarTotal() {
+    cy.get(this.buttonShow)
+      .children("button")
+      .contains("Show total price")
+      .click();
+  }
 
-  obtenerCantProducto2() {
-    return cy.get(this.productQuantity2);
-  }
-  obtenerProductos2() {
-    return cy.get(this.productName2);
-  }
-  obtenerNombreProduct2() {
-    return cy.get(this.price2);
-  }
- 
-  getTotalPrice2(parcial2) {
-    this.PriceParcial2 =`:nth-child(3) > .css-1bhbsny > #totalPrice[name^='${parcial2}']`
-    return cy.get(this.PriceParcial2);
-  }
-  obtenerPrecioTotalProduct(){
-    return cy.get(this.precioTotalProduct);
+  getTotalPrice(sumaTotal) {
+    return cy
+      .get(this.precioTotalProduct)
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.be.equal(`${sumaTotal}`);
+      });
   }
 }
