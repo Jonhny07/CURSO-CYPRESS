@@ -72,6 +72,11 @@ describe("Primera Entrega Validaciones", () => {
       data.producto1.nombre
     );
 
+    shoppingCartPage.obtenerNombreProduct(
+      data.producto2.cantidad,
+      data.producto2.nombre
+    );
+
     shoppingCartPage.obtenerShowPrice(
       data.producto1.nombre,
       data.producto1.precio
@@ -81,6 +86,29 @@ describe("Primera Entrega Validaciones", () => {
       data.producto2.nombre,
       data.producto2.precio
     );
+
+    /*shoppingCartPage.obtenerSumaProducto(
+      data.producto1.nombre,(data.producto1.preciototal = data.producto1.preciototal * 2)
+      //`$ ${(data.producto1.preciototal = data.producto1.preciototal * 2)}`
+    );*/
+    cy.contains("p", data.producto1.nombre)
+      .siblings("#totalPrice")
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.be.equal(
+          `$ ${data.producto1.precio * data.producto1.cantidad}`
+        );
+      });
+
+    cy.contains("p", data.producto2.nombre)
+      .siblings("#totalPrice")
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.be.equal(
+          `$ ${data.producto2.precio * data.producto2.cantidad}`
+        );
+      });
+
     shoppingCartPage.visualizarTotal();
 
     data.precioTotal =

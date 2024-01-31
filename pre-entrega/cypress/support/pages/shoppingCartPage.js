@@ -1,9 +1,9 @@
 export class ShoppingCartPage {
   constructor() {
-    this.productQuantity = ":nth-child(2) > .css-1bhbsny > #productAmount";
+    this.productQuantity = "#productAmount";
     this.productName = "#productName";
-    //this.price = ":nth-child(2) > .css-1bhbsny > #unitPrice";
     this.price = "#unitPrice";
+    this.totalPrice = "#totalPrice";
     this.buttonShow = "div.css-n1d5pa";
     this.precioTotalProduct = "#price > b";
   }
@@ -11,8 +11,8 @@ export class ShoppingCartPage {
   obtenerCantProducto(nombre, cantidad) {
     //return cy.get(this.productQuantity);
     return cy
-      .contains("#productName", nombre)
-      .prev("#productAmount")
+      .contains(this.productName, nombre)
+      .prev(this.productQuantity)
       .invoke("text")
       .then((text) => {
         expect(text).to.be.equal(`${cantidad}`);
@@ -21,7 +21,7 @@ export class ShoppingCartPage {
 
   obtenerNombreProduct(cantidad, nombre) {
     return cy
-      .contains("#productAmount", cantidad)
+      .contains(this.productQuantity, cantidad)
       .siblings(this.productName)
       .invoke("text")
       .then((text) => {
@@ -31,7 +31,7 @@ export class ShoppingCartPage {
   obtenerShowPrice(nombre, precio) {
     //return cy.get(this.showTotalPrice).children(".css-1i1ynt3").click();
     return cy
-      .contains("#productName", nombre)
+      .contains(this.productName, nombre)
       .siblings(this.price)
       .invoke("text")
       .then((text) => {
@@ -39,6 +39,17 @@ export class ShoppingCartPage {
       });
   }
 
+  /*obtenerSumaProducto(nombre, precio) {
+    return cy
+      .contains("p", data.producto.name)
+      .siblings("#totalPrice")
+      .find(`[name="$ ${data.producto.}"]`);
+
+    cy.contains("p", data.producto.name)
+      .siblings("div")
+      .find(`[id="add-to-cart-${data.producto.id}"]`)
+      .click();
+  }*/
   visualizarTotal() {
     cy.get(this.buttonShow)
       .children("button")
