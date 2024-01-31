@@ -9,7 +9,6 @@ export class ShoppingCartPage {
   }
 
   obtenerCantProducto(nombre, cantidad) {
-    //return cy.get(this.productQuantity);
     return cy
       .contains(this.productName, nombre)
       .prev(this.productQuantity)
@@ -29,7 +28,6 @@ export class ShoppingCartPage {
       });
   }
   obtenerShowPrice(nombre, precio) {
-    //return cy.get(this.showTotalPrice).children(".css-1i1ynt3").click();
     return cy
       .contains(this.productName, nombre)
       .siblings(this.price)
@@ -39,17 +37,17 @@ export class ShoppingCartPage {
       });
   }
 
-  /*obtenerSumaProducto(nombre, precio) {
-    return cy
-      .contains("p", data.producto.name)
+  obtenerPriceTotal(nombre,totalUnitario){
+   return cy.contains("p", nombre)
       .siblings("#totalPrice")
-      .find(`[name="$ ${data.producto.}"]`);
+      .invoke("text")
+      .then((text) => {
+        expect(text).to.be.equal(
+          `$ ${totalUnitario}`
+        );
+      });
+  }
 
-    cy.contains("p", data.producto.name)
-      .siblings("div")
-      .find(`[id="add-to-cart-${data.producto.id}"]`)
-      .click();
-  }*/
   visualizarTotal() {
     cy.get(this.buttonShow)
       .children("button")

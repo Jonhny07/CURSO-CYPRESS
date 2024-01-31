@@ -20,7 +20,7 @@ describe("Primera Entrega Validaciones", () => {
 
   beforeEach(() => {
     cy.visit("");
-    cy.xpath("//span[@id='registertoggle']").dblclick();
+    loginPage.iniciarSesion();
     loginPage.escribirUsuario(Cypress.env().usuario);
     loginPage.escribirContraseña(Cypress.env().password);
     loginPage.clickLogin();
@@ -58,6 +58,7 @@ describe("Primera Entrega Validaciones", () => {
     productPage.clickGoToCart();
 
     ///Verificar nombre,cantidad,precio unitario y el precio total del producto
+    //Verificamos la cantidad del producto
     shoppingCartPage.obtenerCantProducto(
       data.producto1.nombre,
       data.producto1.cantidad
@@ -66,6 +67,8 @@ describe("Primera Entrega Validaciones", () => {
       data.producto2.nombre,
       data.producto2.cantidad
     );
+
+    //Verificamos el nombre del producto
 
     shoppingCartPage.obtenerNombreProduct(
       data.producto1.cantidad,
@@ -77,6 +80,8 @@ describe("Primera Entrega Validaciones", () => {
       data.producto2.nombre
     );
 
+    //Verificamos el precio unitario del producto
+
     shoppingCartPage.obtenerShowPrice(
       data.producto1.nombre,
       data.producto1.precio
@@ -87,27 +92,20 @@ describe("Primera Entrega Validaciones", () => {
       data.producto2.precio
     );
 
-    /*shoppingCartPage.obtenerSumaProducto(
-      data.producto1.nombre,(data.producto1.preciototal = data.producto1.preciototal * 2)
-      //`$ ${(data.producto1.preciototal = data.producto1.preciototal * 2)}`
-    );*/
-    cy.contains("p", data.producto1.nombre)
-      .siblings("#totalPrice")
-      .invoke("text")
-      .then((text) => {
-        expect(text).to.be.equal(
-          `$ ${data.producto1.precio * data.producto1.cantidad}`
-        );
-      });
+    //Verificamos el total unitario del producto
 
-    cy.contains("p", data.producto2.nombre)
-      .siblings("#totalPrice")
-      .invoke("text")
-      .then((text) => {
-        expect(text).to.be.equal(
-          `$ ${data.producto2.precio * data.producto2.cantidad}`
-        );
-      });
+    shoppingCartPage.obtenerPriceTotal(
+      data.producto1.nombre,
+      data.producto1.precio * data.producto1.cantidad
+    );
+    shoppingCartPage.obtenerPriceTotal(
+      data.producto2.nombre,
+      data.producto2.precio * data.producto2.cantidad
+    );
+
+  
+
+    //Verificamos la suma total del producto
 
     shoppingCartPage.visualizarTotal();
 
