@@ -1,41 +1,36 @@
-///<reference types="Cypress" />
-
+///<reference types="Cypress"/>
 import { HomePage } from "../support/pages/homePage";
-import { LoginPage } from "../support/pages/loginPage";
 import { ProductPage } from "../support/pages/productPage";
 import { ShoppingCartPage } from "../support/pages/shoppingCartPage";
-
-describe("Primera Entrega Validaciones", () => {
+import { CheckOutPage } from "../support/pages/checkOutPage";
+describe("template spec", () => {
   let data = {};
-  const loginPage = new LoginPage();
+  let datosTarjetas = {};
   const homePage = new HomePage();
   const productPage = new ProductPage();
   const shoppingCartPage = new ShoppingCartPage();
+  const checkOutPage = new CheckOutPage();
 
   before(() => {
     cy.fixture("datos-productos").then((datosFixture) => {
       data = datosFixture;
     });
+    cy.fixture("checkOut").then((datosFixture) => {
+      datosTarjetas = datosFixture;
+    });
   });
 
   beforeEach(() => {
+    cy.registerWithAPI();
+    cy.loginWithAPI("pruebasIT1", "123456!");
     cy.visit("");
-    loginPage.iniciarSesion();
-    loginPage.escribirUsuario(Cypress.env().usuario);
-    loginPage.escribirContraseña(Cypress.env().password);
-    loginPage.clickLogin();
     homePage.clickOnlineShopLink();
   });
 
-  it("Validar Requisitos de la Pre-Entrega", () => {
-    //Se agrega el primer producto
-    productPage
-      .clickAddButton(data.productos.producto1.name)
-      .find(`[name="${data.productos.producto1.name}"]`)
-      .click();
-    productPage.clickCloseModal();
+  /////////////////////////////Empieza el IT/////////////////////////////////////////////////////////
 
-    //Agregando el mismo producto
+  it("Entrega Final - Test Requisitos", () => {
+    //Se agrega el primer producto
     productPage
       .clickAddButton(data.productos.producto1.name)
       .find(`[name="${data.productos.producto1.name}"]`)
@@ -56,17 +51,6 @@ describe("Primera Entrega Validaciones", () => {
       .should("have.text", "Go to shopping cart");
     //Nos dirigimos al carrito de compra
     productPage.clickGoToCart();
-
-    ///Verificar nombre,cantidad,precio unitario y el precio total del producto
-    //Verificamos la cantidad del producto
-    shoppingCartPage.obtenerCantProducto(
-      data.productos.producto1.name,
-      data.productos.producto1.quantity
-    );
-    shoppingCartPage.obtenerCantProducto(
-      data.productos.producto2.name,
-      data.productos.producto2.quantity
-    );
 
     //Verificamos el nombre del producto
 
@@ -92,27 +76,46 @@ describe("Primera Entrega Validaciones", () => {
       data.productos.producto2.price
     );
 
-    //Verificamos el total unitario del producto
-
-    shoppingCartPage.obtenerPriceTotal(
-      data.productos.producto1.name,
-      data.productos.producto1.price * data.productos.producto1.quantity
-    );
-    shoppingCartPage.obtenerPriceTotal(
-      data.productos.producto2.name,
-      data.productos.producto2.price * data.productos.producto2.quantity
-    );
-
-  
-
     //Verificamos la suma total del producto
 
     shoppingCartPage.visualizarTotal();
-
     data.precioTotal =
-      data.productos.producto1.price * data.productos.producto1.quantity +
-      data.productos.producto2.price * data.productos.producto2.quantity;
+      data.productos.producto1.price + data.productos.producto2.price;
 
     shoppingCartPage.getTotalPrice(data.precioTotal);
+
+    checkOutPage.clickCheckOut();
+    checkOutPage.escribirFirstName(datosTarjetas.datos.firstName);
+    checkOutPage.escribirLastName(datosTarjetas.datos.lastName);
+    checkOutPage.escribirCardNumber(datosTarjetas.datos.cardNumber);
+    checkOutPage.clickPurchase();
+    checkOutPage.obtenerNameLast(
+      datosTarjetas.datos.firstName,
+      datosTarjetas.datos.lastName,
+      datosTarjetas.MensajeSucces.textoUno
+    );
+    checkOutPage.obtenerProducto(
+      data.productos.producto1.quantity,
+      data.productos.producto1.name
+    );
+    checkOutPage.obtenerProducto(
+      data.productos.producto2.quantity,
+      data.productos.producto2.name
+    );
+    checkOutPage.obtenerCardNumber(datosTarjetas.datos.cardNumber);
+    checkOutPage.obtenerPrecioTotal(
+      datosTarjetas.MensajeSucces.textoPrecio,
+      data.precioTotal
+    );
+    checkOutPage.clickButtonThankYou()
+  });
+
+  afterEach(() => {
+    cy.request({
+      method: "DELETE",
+      url: `https://pushing-it.onrender.com/api/deleteuser/pruebasIT1`,
+    }).then((respuesta) => {
+      expect(respuesta.status).to.be.equal(202);
+    });
   });
 });

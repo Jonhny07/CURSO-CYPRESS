@@ -20,7 +20,7 @@ export class ShoppingCartPage {
 
   obtenerNombreProduct(cantidad, nombre) {
     return cy
-      .contains(this.productQuantity, cantidad)
+      .contains(this.price, cantidad)
       .siblings(this.productName)
       .invoke("text")
       .then((text) => {
@@ -37,14 +37,13 @@ export class ShoppingCartPage {
       });
   }
 
-  obtenerPriceTotal(nombre,totalUnitario){
-   return cy.contains("p", nombre)
+  obtenerPriceTotal(nombre, totalUnitario) {
+    return cy
+      .contains("p", nombre)
       .siblings("#totalPrice")
       .invoke("text")
       .then((text) => {
-        expect(text).to.be.equal(
-          `$ ${totalUnitario}`
-        );
+        expect(text).to.be.equal(`$ ${totalUnitario}`);
       });
   }
 

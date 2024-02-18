@@ -2,7 +2,6 @@ const constantes = require("../pages/constants");
 export class ProductPage {
   constructor() {
     this.buttonCart = '.css-1ktw94t > [data-cy="goShoppingCart"]';
-
     this.closeModal = "#closeModal";
     this.addButton = "add-to-cart-";
     this.goToCartButton = '.css-1ktw94t > [data-cy="goShoppingCart"]';
