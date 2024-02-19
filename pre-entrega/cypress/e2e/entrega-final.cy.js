@@ -95,11 +95,9 @@ describe("template spec", () => {
       datosTarjetas.MensajeSucces.textoUno
     );
     checkOutPage.obtenerProducto(
-      data.productos.producto1.quantity,
       data.productos.producto1.name
     );
     checkOutPage.obtenerProducto(
-      data.productos.producto2.quantity,
       data.productos.producto2.name
     );
     checkOutPage.obtenerCardNumber(datosTarjetas.datos.cardNumber);

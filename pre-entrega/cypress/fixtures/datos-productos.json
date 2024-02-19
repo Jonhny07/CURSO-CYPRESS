@@ -1,7 +1,7 @@
 {
   "productos": {
     "producto1": {
-      "quantity": "1",
+      "quantity": "2",
       "name": "Buzo Negro",
       "price": 23.76
     },

@@ -34,12 +34,12 @@ export class CheckOutPage {
           expect(text).to.be.equal(`${nombre} ${apellido} ${mensaje}`);
         });
     }
-    obtenerProducto(cantidad, productName) {
+    obtenerProducto(productName) {
       return cy
         .get(`[id="${productName}"]`)
         .invoke("text")
         .then((text) => {
-          expect(text).to.be.equal(`${cantidad} x ${productName}`);
+          expect(text).to.be.equal(`1 x ${productName}`);
         });
     }
     obtenerCardNumber(cardNumber) {
